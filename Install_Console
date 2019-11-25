@@ -1,0 +1,16 @@
+#!/usr/bin/env python
+"""Install Console Launch Application
+
+This file is used for launching the application.
+
+"""
+import GUI
+import os
+import sys
+
+
+__version__ = '1.0.0'
+
+if __name__ == '__main__':
+    os.chdir(sys.path[0])
+    GUI.initialize()
