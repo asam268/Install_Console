@@ -119,7 +119,6 @@ def validate(pwd):
     """
 
     os.chdir(sys.path[0])
-    # print "" + sys.path[0]
     cmd = "./Resources/Validate"
     exec_cmd = "echo %s|sudo -S %s" % (pwd, cmd)
     os.system("echo %s|sudo -S -v" % pwd)
@@ -169,14 +168,11 @@ def exec_changes(e, pop):
         root.destroy()
     else:
         attempts += 1
-        # print "Password Incorrect"
         if attempts <= 1:
             lblerror = ttk.Label(pop, text="Password Incorrect.", font=NORMAL)
             lblerror.pack()
 
 
-# Sets the ComputerName and HostName of the computer from the data entered in the main GUI
-# Parameters:   pwd - Admin password
 def set_computer_name(pwd):
     """Sets the name of the computer from the data entered in the main GUI.
 
@@ -197,7 +193,6 @@ def set_computer_name(pwd):
     os.system("echo %s|sudo -S %s" % (pwd, cmd))
 
 
-# Sets the Asset Tag based of data entered in the main GUI.
 def set_asset_tag(pwd):
     """Sets the Asset Tag based of data entered in the main GUI.
 
@@ -208,7 +203,6 @@ def set_asset_tag(pwd):
     global asset_tag
     cmd = "defaults write /Library/Preferences/com.apple.RemoteDesktop.plist Text1 " + asset_tag
     os.system("echo %s|sudo -S %s" % (pwd, cmd))
-    # print(get_asset_tag())
 
 
 def set_repo(pwd):
@@ -332,7 +326,7 @@ def munki_console(frame_m):
         msg_manifest.pack()
         cb_munki.pack()
     else:
-        installer = Button(frame_m, text="Install Munki", command=lambda: install_munki_tools())
+        installer = ttk.Button(frame_m, text="Install Munki", command=lambda: install_munki_tools())
         installer.pack()
 
 
@@ -347,7 +341,6 @@ def install_munki_tools():
     """
 
     tkMessageBox.showwarning("Install Munki Tools", "Installing Munki Tools will require a system reboot.")
-    # Munki_Tools.test_print()
     Munki_Tools.munki_pwd()
 
 
