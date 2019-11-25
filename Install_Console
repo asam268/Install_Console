@@ -3,7 +3,9 @@
 
 This file is used for launching the application.
 
+Changes the current working directory to the program directory and launches the GUI application.
 """
+
 import GUI
 import os
 import sys

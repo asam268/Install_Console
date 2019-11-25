@@ -26,12 +26,12 @@ import Munki_Tools
 computer_name = ""  # Value for the name of the current system
 asset_tag = ""  # Value for the asset tag of the current system
 root = tk.Tk()  # Root function for GUI
-msgRepo = Entry(root)  # Entry for software repo URL
-msgManifest = Entry(root)  # Entry for server manifest
-varIvanti = IntVar()  # Holds 'is checked' value for Ivanti check box
-varAtag = IntVar()  # Holds 'is checked' value for Asset Tag check box
-varNetwork = IntVar()  # Holds 'is checked' value for Network check box
-varMunki = IntVar()  # Holds 'is checked' value for software install check box
+msg_repo = Entry(root)  # Entry for software repo URL
+msg_manifest = Entry(root)  # Entry for server manifest
+var_ivanti = IntVar()  # Holds 'is checked' value for Ivanti check box
+var_atag = IntVar()  # Holds 'is checked' value for Asset Tag check box
+var_network = IntVar()  # Holds 'is checked' value for Network check box
+var_munki = IntVar()  # Holds 'is checked' value for software install check box
 attempts = 0  # Number of attempts when enter password
 
 
@@ -149,16 +149,16 @@ def exec_changes(e, pop):
     if validate(pwd):
         # set_computer_name(pwd)
         # set_asset_tag(pwd)
-        if varIvanti.get():
+        if var_ivanti.get():
             # run_ivanti_script(pwd)
             print("Ivant checked")
-        if varAtag.get():
+        if var_atag.get():
             # run_asset_tag_script(pwd)
             print("Asset tag checked")
-        if varNetwork.get():
+        if var_network.get():
             # run_network_script(pwd)
             print("Network checked")
-        if varMunki.get():
+        if var_munki.get():
             set_repo(pwd)
             set_manifest(pwd)
             Munki_Tools.managed_software_update(pwd)
@@ -218,8 +218,8 @@ def set_repo(pwd):
     :return: void
     """
 
-    global msgRepo
-    repo = msgRepo.get()
+    global msg_repo
+    repo = msg_repo.get()
     cmd = "defaults write /Library/Preferences/ManagedInstalls.plist SoftwareRepoURL " + repo
     os.system("echo %s|sudo -S %s" % (pwd, cmd))
 
@@ -231,8 +231,8 @@ def set_manifest(pwd):
     :return: void
     """
 
-    global msgManifest
-    manifest = msgManifest.get()
+    global msg_manifest
+    manifest = msg_manifest.get()
     cmd = "defaults write /Library/Preferences/ManagedInstalls.plist ClientIdentifier " + manifest
     os.system("echo %s|sudo -S %s" % (pwd, cmd))
 
@@ -294,7 +294,7 @@ def ivanti_warning():
     :return: void
     """
 
-    if not varIvanti.get():
+    if not var_ivanti.get():
         tkMessageBox.showwarning("Ivanti LANDesk Warning", "The Asset Tag script will only work if LANDesk is "
                                                            "installed.")
 
@@ -311,26 +311,26 @@ def munki_console(frame_m):
     :return: void
     """
 
-    global msgRepo
-    global msgManifest
+    global msg_repo
+    global msg_manifest
     if os.path.exists("/Library/Preferences/ManagedInstalls.plist"):
         repo = get_repo()
         manifest = get_manifest()
-        lblMunki = Label(frame_m, text="Munki Configuration", pady=7, relief=RAISED)
-        lblRepo = Label(frame_m, text="Software Repo URL")
-        lblManifest = Label(frame_m, text="Manifest (Client Identifier)")
-        msgRepo = Entry(frame_m)
-        msgRepo.insert(0, repo)
-        msgManifest = Entry(frame_m)
-        msgManifest.insert(0, manifest)
-        cbMunki = Checkbutton(frame_m, text="Run Software Installation", variable=varMunki)
+        lbl_munki = Label(frame_m, text="Munki Configuration", pady=7, relief=RAISED)
+        lbl_repo = Label(frame_m, text="Software Repo URL")
+        lbl_manifest = Label(frame_m, text="Manifest (Client Identifier)")
+        msg_repo = Entry(frame_m)
+        msg_repo.insert(0, repo)
+        msg_manifest = Entry(frame_m)
+        msg_manifest.insert(0, manifest)
+        cb_munki = Checkbutton(frame_m, text="Run Software Installation", variable=var_munki)
 
-        lblMunki.pack()
-        lblRepo.pack()
-        msgRepo.pack()
-        lblManifest.pack()
-        msgManifest.pack()
-        cbMunki.pack()
+        lbl_munki.pack()
+        lbl_repo.pack()
+        msg_repo.pack()
+        lbl_manifest.pack()
+        msg_manifest.pack()
+        cb_munki.pack()
     else:
         installer = Button(frame_m, text="Install Munki", command=lambda: install_munki_tools())
         installer.pack()
@@ -365,40 +365,40 @@ def initialize():
     atag = get_asset_tag()
 
     # labels and message boxes
-    lblRemote = Label(frame, text="Please activate all privileges for\nRemote Management in Sharing\nSettings before "
-                                  "using this program.", relief=RAISED)
-    lblCname = Label(frame, text="Computer Name")
-    msgCname = Entry(frame)
-    msgCname.insert(0, cname)
+    lbl_remote = Label(frame, text="Please activate all privileges for\nRemote Management in Sharing\nSettings before "
+                                   "using this program.", relief=RAISED)
+    lbl_cname = Label(frame, text="Computer Name")
+    msg_cname = Entry(frame)
+    msg_cname.insert(0, cname)
 
-    lblAtag = Label(frame, text="Asset Tag")
-    msgAtag = Entry(frame)
-    msgAtag.insert(0, atag)
+    lbl_atag = Label(frame, text="Asset Tag")
+    msg_atag = Entry(frame)
+    msg_atag.insert(0, atag)
 
     # check buttons: checked by default since all scripts should be run with fresh computers
-    cbIvanti = Checkbutton(frame, text="Run Ivanti Script", variable=varIvanti, command=lambda: ivanti_warning())
-    cbIvanti.select()
-    cbAtagScript = Checkbutton(frame, text="Run Asset Tag Script", variable=varAtag)
-    cbAtagScript.select()
-    cbNetwork = Checkbutton(frame, text="Run Network Script", variable=varNetwork)
-    cbNetwork.select()
+    cb_ivanti = Checkbutton(frame, text="Run Ivanti Script", variable=var_ivanti, command=lambda: ivanti_warning())
+    cb_ivanti.select()
+    cb_atag_script = Checkbutton(frame, text="Run Asset Tag Script", variable=var_atag)
+    cb_atag_script.select()
+    cb_network = Checkbutton(frame, text="Run Network Script", variable=var_network)
+    cb_network.select()
 
     # Execute button: opens password window
-    btnCname = ttk.Button(frame_m, text="Execute", command=lambda: pwd_window(msgCname, msgAtag))
+    btn_cname = ttk.Button(frame_m, text="Execute", command=lambda: pwd_window(msg_cname, msg_atag))
 
     # populate GUI
-    lblRemote.pack()
-    lblCname.pack()
-    msgCname.pack()
-    lblAtag.pack()
-    msgAtag.pack()
-    cbIvanti.pack()
-    cbAtagScript.pack()
-    cbNetwork.pack()
+    lbl_remote.pack()
+    lbl_cname.pack()
+    msg_cname.pack()
+    lbl_atag.pack()
+    msg_atag.pack()
+    cb_ivanti.pack()
+    cb_atag_script.pack()
+    cb_network.pack()
     munki_console(frame_m)
     frame.pack()
     frame_m.pack()
-    btnCname.pack()
+    btn_cname.pack()
 
     # drive GUI
     root.mainloop()
