@@ -75,6 +75,7 @@ def get_manifest():
     return output
 
 
+# TODO: Change the color of the okay button
 def pwd_window(c, a):
     """Password window that retrieves admin password to execute commands based on data entered in the main GUI.
 
@@ -310,14 +311,14 @@ def munki_console(frame_m):
     if os.path.exists("/Library/Preferences/ManagedInstalls.plist"):
         repo = get_repo()
         manifest = get_manifest()
-        lbl_munki = Label(frame_m, text="Munki Configuration", pady=7, relief=RAISED)
-        lbl_repo = Label(frame_m, text="Software Repo URL")
-        lbl_manifest = Label(frame_m, text="Manifest (Client Identifier)")
-        msg_repo = Entry(frame_m)
+        lbl_munki = Label(frame_m, text="Munki Configuration", pady=7, relief=RAISED, bg="#ECECEC")
+        lbl_repo = Label(frame_m, text="Software Repo URL", bg="#ECECEC")
+        lbl_manifest = Label(frame_m, text="Manifest (Client Identifier)", bg="#ECECEC")
+        msg_repo = Entry(frame_m, border="3px #ECECEC")
         msg_repo.insert(0, repo)
-        msg_manifest = Entry(frame_m)
+        msg_manifest = Entry(frame_m, border="3px #ECECEC")
         msg_manifest.insert(0, manifest)
-        cb_munki = Checkbutton(frame_m, text="Run Software Installation", variable=var_munki)
+        cb_munki = Checkbutton(frame_m, text="Run Software Installation", variable=var_munki, bg="#ECECEC")
 
         lbl_munki.pack()
         lbl_repo.pack()
@@ -351,29 +352,31 @@ def initialize():
     """
 
     root.title("Install Console")
-    frame = tk.Frame(root)
-    frame_m = tk.Frame(root)
+    root.configure(bg="#ECECEC")
+    frame = tk.Frame(root, bg="#ECECEC")
+    frame_m = tk.Frame(root, bg="#ECECEC")
     # gets current computer name and Asset tag to populate message boxes
     cname = get_computer_name()
     atag = get_asset_tag()
 
     # labels and message boxes
     lbl_remote = Label(frame, text="Please activate all privileges for\nRemote Management in Sharing\nSettings before "
-                                   "using this program.", relief=RAISED)
-    lbl_cname = Label(frame, text="Computer Name")
-    msg_cname = Entry(frame)
+                                   "using this program.", relief=RAISED, bg="#ECECEC")
+    lbl_cname = Label(frame, text="Computer Name", bg="#ECECEC")
+    msg_cname = Entry(frame, border="3px #ECECEC")
     msg_cname.insert(0, cname)
 
-    lbl_atag = Label(frame, text="Asset Tag")
-    msg_atag = Entry(frame)
+    lbl_atag = Label(frame, text="Asset Tag", bg="#ECECEC")
+    msg_atag = Entry(frame, border="3px #ECECEC")
     msg_atag.insert(0, atag)
 
     # check buttons: checked by default since all scripts should be run with fresh computers
-    cb_ivanti = Checkbutton(frame, text="Run Ivanti Script", variable=var_ivanti, command=lambda: ivanti_warning())
+    cb_ivanti = Checkbutton(frame, text="Run Ivanti Script", variable=var_ivanti, bg="#ECECEC",
+                            command=lambda: ivanti_warning())
     cb_ivanti.select()
-    cb_atag_script = Checkbutton(frame, text="Run Asset Tag Script", variable=var_atag)
+    cb_atag_script = Checkbutton(frame, text="Run Asset Tag Script", variable=var_atag, bg="#ECECEC")
     cb_atag_script.select()
-    cb_network = Checkbutton(frame, text="Run Network Script", variable=var_network)
+    cb_network = Checkbutton(frame, text="Run Network Script", variable=var_network, bg="#ECECEC")
     cb_network.select()
 
     # Execute button: opens password window
