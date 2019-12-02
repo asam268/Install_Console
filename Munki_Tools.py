@@ -8,7 +8,6 @@ a password, a way to install Munki, and initializing a managed software update.
 """
 
 import os
-import Tkinter as tk
 from Tkinter import *
 import ttk
 import GUI
@@ -36,8 +35,8 @@ def munki_install(e, pop_m):
     else:
         attempts += 1
         if attempts <= 1:
-            lblerror = ttk.Label(pop_m, text="Password Incorrect.", font=NORMAL)
-            lblerror.pack()
+            lbl_error = ttk.Label(pop_m, text="Password Incorrect.", font=NORMAL)
+            lbl_error.pack()
 
 
 def managed_software_update(pwd):

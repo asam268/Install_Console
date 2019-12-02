@@ -156,7 +156,7 @@ def exec_changes(e, pop):
         set_asset_tag(pwd)
         if var_ivanti.get():
             # run_ivanti_script(pwd)
-            print("Ivant checked")
+            print("Ivanti checked")
         if var_atag.get():
             # run_asset_tag_script(pwd)
             print("Asset tag checked")
@@ -175,8 +175,8 @@ def exec_changes(e, pop):
     else:
         attempts += 1
         if attempts <= 1:
-            lblerror = ttk.Label(pop, text="Password Incorrect.", font=NORMAL)
-            lblerror.pack()
+            lbl_error = ttk.Label(pop, text="Password Incorrect.", font=NORMAL)
+            lbl_error.pack()
 
 
 def set_computer_name(pwd):
