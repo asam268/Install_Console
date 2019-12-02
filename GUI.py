@@ -148,7 +148,7 @@ def exec_changes(e, pop):
 
     if validate(pwd):
         # set_computer_name(pwd)
-        # set_asset_tag(pwd)
+        set_asset_tag(pwd)
         if var_ivanti.get():
             # run_ivanti_script(pwd)
             print("Ivant checked")
@@ -314,9 +314,9 @@ def munki_console(frame_m):
         lbl_munki = Label(frame_m, text="Munki Configuration", pady=7, relief=RAISED, bg="#ECECEC")
         lbl_repo = Label(frame_m, text="Software Repo URL", bg="#ECECEC")
         lbl_manifest = Label(frame_m, text="Manifest (Client Identifier)", bg="#ECECEC")
-        msg_repo = Entry(frame_m, border="3px #ECECEC")
+        msg_repo = ttk.Entry(frame_m)
         msg_repo.insert(0, repo)
-        msg_manifest = Entry(frame_m, border="3px #ECECEC")
+        msg_manifest = ttk.Entry(frame_m)
         msg_manifest.insert(0, manifest)
         cb_munki = Checkbutton(frame_m, text="Run Software Installation", variable=var_munki, bg="#ECECEC")
 
@@ -359,15 +359,15 @@ def initialize():
     cname = get_computer_name()
     atag = get_asset_tag()
 
-    # labels and message boxes
+    # labels and entries
     lbl_remote = Label(frame, text="Please activate all privileges for\nRemote Management in Sharing\nSettings before "
                                    "using this program.", relief=RAISED, bg="#ECECEC")
     lbl_cname = Label(frame, text="Computer Name", bg="#ECECEC")
-    msg_cname = Entry(frame, border="3px #ECECEC")
+    msg_cname = ttk.Entry(frame)
     msg_cname.insert(0, cname)
 
     lbl_atag = Label(frame, text="Asset Tag", bg="#ECECEC")
-    msg_atag = Entry(frame, border="3px #ECECEC")
+    msg_atag = ttk.Entry(frame)
     msg_atag.insert(0, atag)
 
     # check buttons: checked by default since all scripts should be run with fresh computers
