@@ -76,11 +76,12 @@ def get_manifest():
 
 
 # TODO: Change the color of the okay button
-def pwd_window(c, a):
+def pwd_window(c, a, src):
     """Password window that retrieves admin password to execute commands based on data entered in the main GUI.
 
     :param c: Tkinter Entry, computer name
     :param a: Tkinter Entry, asset tag
+    :param src: String, contains information about which button called the pwd window
     :return:
     """
 
@@ -88,8 +89,6 @@ def pwd_window(c, a):
     global asset_tag
     global attempts
     attempts = 0
-    computer_name = c.get()
-    asset_tag = a.get()
 
     pop = tk.Toplevel(bg="#ECECEC")
     pop.wm_title("Enter Password")
@@ -97,7 +96,13 @@ def pwd_window(c, a):
 
     label = ttk.Label(pop_frame, text="Password:", font=NORMAL)
     pwd = ttk.Entry(pop_frame, show='*')
-    b1 = ttk.Button(pop_frame, text='Okay', command=lambda: exec_changes(pwd, pop))
+    b1 = ttk.Button(pop_frame, text='Okay')
+    if src == "main":
+        b1.configure(command=lambda: exec_changes(pwd, pop))
+        computer_name = c.get()
+        asset_tag = a.get()
+    elif src == "munki":
+        b1.configure(command=lambda: Munki_Tools.munki_install(pwd, pop))
     b2 = ttk.Button(pop_frame, text='Cancel', command=lambda: pop.destroy())
 
     pop_frame.pack()
@@ -342,7 +347,7 @@ def install_munki_tools():
     """
 
     tkMessageBox.showwarning("Install Munki Tools", "Installing Munki Tools will require a system reboot.")
-    Munki_Tools.munki_pwd()
+    pwd_window(0, 0, "munki")
 
 
 def initialize():
@@ -380,7 +385,7 @@ def initialize():
     cb_network.select()
 
     # Execute button: opens password window
-    btn_cname = ttk.Button(frame_m, text="Execute", command=lambda: pwd_window(msg_cname, msg_atag))
+    btn_cname = ttk.Button(frame_m, text="Execute", command=lambda: pwd_window(msg_cname, msg_atag, "main"))
 
     # populate GUI
     lbl_remote.pack()
