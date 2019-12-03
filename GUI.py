@@ -75,7 +75,6 @@ def get_manifest():
     return output
 
 
-# TODO: Change the color of the okay button
 def pwd_window(c, a, src):
     """Password window that retrieves admin password to execute commands based on data entered in the main GUI.
 
@@ -316,7 +315,7 @@ def munki_console(frame_m):
     if os.path.exists("/Library/Preferences/ManagedInstalls.plist"):
         repo = get_repo()
         manifest = get_manifest()
-        lbl_munki = Label(frame_m, text="Munki Configuration", pady=7, relief=RAISED, bg="#ECECEC")
+        lbl_munki = Label(frame_m, text="Munki Configuration", relief=RAISED, bg="#ECECEC")
         lbl_repo = Label(frame_m, text="Software Repo URL", bg="#ECECEC")
         lbl_manifest = Label(frame_m, text="Manifest (Client Identifier)", bg="#ECECEC")
         msg_repo = ttk.Entry(frame_m)
@@ -375,6 +374,8 @@ def initialize():
     msg_atag = ttk.Entry(frame)
     msg_atag.insert(0, atag)
 
+    lbl_space = Label(frame, text="", bg="#ECECEC")
+
     # check buttons: checked by default since all scripts should be run with fresh computers
     cb_ivanti = Checkbutton(frame, text="Run Ivanti Script", variable=var_ivanti, bg="#ECECEC",
                             command=lambda: ivanti_warning())
@@ -396,6 +397,7 @@ def initialize():
     cb_ivanti.pack()
     cb_atag_script.pack()
     cb_network.pack()
+    lbl_space.pack()
     munki_console(frame_m)
     frame.pack()
     frame_m.pack()
