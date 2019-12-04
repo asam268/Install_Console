@@ -151,23 +151,23 @@ def exec_changes(e, pop):
     pwd = "'" + pwd + "'"
 
     if validate(pwd):
-        # set_computer_name(pwd)
+        set_computer_name(pwd)
         set_asset_tag(pwd)
         if var_ivanti.get():
-            # run_ivanti_script(pwd)
-            print("Ivanti checked")
+            run_ivanti_script(pwd)
+            # print("Ivanti checked")
         if var_atag.get():
-            # run_asset_tag_script(pwd)
-            print("Asset tag checked")
+            run_asset_tag_script(pwd)
+            # print("Asset tag checked")
         if var_network.get():
-            # run_network_script(pwd)
-            print("Network checked")
+            run_network_script(pwd)
+            # print("Network checked")
         if var_munki.get():
             set_repo(pwd)
             set_manifest(pwd)
             Munki_Tools.managed_software_update(pwd)
             print("Munki checked")
-        # enable_fast_user_switching(pwd)
+        enable_fast_user_switching(pwd)
         os.system("sudo -k")
         pop.destroy()
         root.destroy()
