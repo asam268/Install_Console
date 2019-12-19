@@ -33,6 +33,11 @@ var_atag = IntVar()  # Holds 'is checked' value for Asset Tag check box
 var_network = IntVar()  # Holds 'is checked' value for Network check box
 var_munki = IntVar()  # Holds 'is checked' value for software install check box
 attempts = 0  # Number of attempts when enter password
+# TODO: Disable main GUI window while password window is open.
+# TODO: Make repo location default in the repo box.
+# TODO: Remove warning for Munki installation.
+# TODO: Add button to open up sharing settings
+# TODO: Asset Tag script often failed, why?
 
 
 def get_computer_name():
@@ -75,12 +80,12 @@ def get_manifest():
     return output
 
 
-# TODO: Change the color of the okay button
-def pwd_window(c, a):
+def pwd_window(c, a, src):
     """Password window that retrieves admin password to execute commands based on data entered in the main GUI.
 
     :param c: Tkinter Entry, computer name
     :param a: Tkinter Entry, asset tag
+    :param src: String, contains information about which button called the pwd window
     :return:
     """
 
@@ -88,8 +93,6 @@ def pwd_window(c, a):
     global asset_tag
     global attempts
     attempts = 0
-    computer_name = c.get()
-    asset_tag = a.get()
 
     pop = tk.Toplevel(bg="#ECECEC")
     pop.wm_title("Enter Password")
@@ -97,7 +100,13 @@ def pwd_window(c, a):
 
     label = ttk.Label(pop_frame, text="Password:", font=NORMAL)
     pwd = ttk.Entry(pop_frame, show='*')
-    b1 = ttk.Button(pop_frame, text='Okay', command=lambda: exec_changes(pwd, pop))
+    b1 = ttk.Button(pop_frame, text='Okay')
+    if src == "main":
+        b1.configure(command=lambda: exec_changes(pwd, pop))
+        computer_name = c.get()
+        asset_tag = a.get()
+    elif src == "munki":
+        b1.configure(command=lambda: Munki_Tools.munki_install(pwd, pop))
     b2 = ttk.Button(pop_frame, text='Cancel', command=lambda: pop.destroy())
 
     pop_frame.pack()
@@ -147,31 +156,31 @@ def exec_changes(e, pop):
     pwd = "'" + pwd + "'"
 
     if validate(pwd):
-        # set_computer_name(pwd)
+        set_computer_name(pwd)
         set_asset_tag(pwd)
         if var_ivanti.get():
-            # run_ivanti_script(pwd)
-            print("Ivant checked")
+            run_ivanti_script(pwd)
+            # print("Ivanti checked")
         if var_atag.get():
-            # run_asset_tag_script(pwd)
-            print("Asset tag checked")
+            run_asset_tag_script(pwd)
+            # print("Asset tag checked")
         if var_network.get():
-            # run_network_script(pwd)
-            print("Network checked")
+            run_network_script(pwd)
+            # print("Network checked")
         if var_munki.get():
             set_repo(pwd)
             set_manifest(pwd)
             Munki_Tools.managed_software_update(pwd)
             print("Munki checked")
-        # enable_fast_user_switching(pwd)
+        enable_fast_user_switching(pwd)
         os.system("sudo -k")
         pop.destroy()
         root.destroy()
     else:
         attempts += 1
         if attempts <= 1:
-            lblerror = ttk.Label(pop, text="Password Incorrect.", font=NORMAL)
-            lblerror.pack()
+            lbl_error = ttk.Label(pop, text="Password Incorrect.", font=NORMAL)
+            lbl_error.pack()
 
 
 def set_computer_name(pwd):
@@ -311,7 +320,7 @@ def munki_console(frame_m):
     if os.path.exists("/Library/Preferences/ManagedInstalls.plist"):
         repo = get_repo()
         manifest = get_manifest()
-        lbl_munki = Label(frame_m, text="Munki Configuration", pady=7, relief=RAISED, bg="#ECECEC")
+        lbl_munki = Label(frame_m, text="Munki Configuration", relief=RAISED, bg="#ECECEC")
         lbl_repo = Label(frame_m, text="Software Repo URL", bg="#ECECEC")
         lbl_manifest = Label(frame_m, text="Manifest (Client Identifier)", bg="#ECECEC")
         msg_repo = ttk.Entry(frame_m)
@@ -342,7 +351,7 @@ def install_munki_tools():
     """
 
     tkMessageBox.showwarning("Install Munki Tools", "Installing Munki Tools will require a system reboot.")
-    Munki_Tools.munki_pwd()
+    pwd_window(0, 0, "munki")
 
 
 def initialize():
@@ -370,6 +379,8 @@ def initialize():
     msg_atag = ttk.Entry(frame)
     msg_atag.insert(0, atag)
 
+    lbl_space = Label(frame, text="", bg="#ECECEC")
+
     # check buttons: checked by default since all scripts should be run with fresh computers
     cb_ivanti = Checkbutton(frame, text="Run Ivanti Script", variable=var_ivanti, bg="#ECECEC",
                             command=lambda: ivanti_warning())
@@ -380,7 +391,7 @@ def initialize():
     cb_network.select()
 
     # Execute button: opens password window
-    btn_cname = ttk.Button(frame_m, text="Execute", command=lambda: pwd_window(msg_cname, msg_atag))
+    btn_cname = ttk.Button(frame_m, text="Execute", command=lambda: pwd_window(msg_cname, msg_atag, "main"))
 
     # populate GUI
     lbl_remote.pack()
@@ -391,6 +402,7 @@ def initialize():
     cb_ivanti.pack()
     cb_atag_script.pack()
     cb_network.pack()
+    lbl_space.pack()
     munki_console(frame_m)
     frame.pack()
     frame_m.pack()

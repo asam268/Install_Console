@@ -8,38 +8,11 @@ a password, a way to install Munki, and initializing a managed software update.
 """
 
 import os
-import Tkinter as tk
 from Tkinter import *
 import ttk
 import GUI
 
 attempts = 0
-
-
-def munki_pwd():
-    """Password window for installing Munki Tools
-
-    Similar to the main password window, but this one just installs Munki.
-    :return: void
-    """
-
-    global attempts
-    attempts = 0
-
-    pop_m = tk.Toplevel(bg="#ECECEC")
-    pop_m.wm_title("Enter Password")
-    pop_frame = Frame(pop_m, bg="#ECECEC")
-
-    label = ttk.Label(pop_frame, text="Password:", font=NORMAL)
-    pwd = ttk.Entry(pop_frame, show='*')
-    b1 = ttk.Button(pop_frame, text='Okay', command=lambda: munki_install(pwd, pop_m))
-    b2 = ttk.Button(pop_frame, text='Cancel', command=lambda: pop_m.destroy())
-
-    pop_frame.pack()
-    label.pack(side='top', fill='x', padx=10)
-    pwd.pack(fill='x', padx=10)
-    b1.pack(side='right')
-    b2.pack(side='left')
 
 
 def munki_install(e, pop_m):
@@ -62,8 +35,8 @@ def munki_install(e, pop_m):
     else:
         attempts += 1
         if attempts <= 1:
-            lblerror = ttk.Label(pop_m, text="Password Incorrect.", font=NORMAL)
-            lblerror.pack()
+            lbl_error = ttk.Label(pop_m, text="Password Incorrect.", font=NORMAL)
+            lbl_error.pack()
 
 
 def managed_software_update(pwd):
