@@ -33,6 +33,11 @@ var_atag = IntVar()  # Holds 'is checked' value for Asset Tag check box
 var_network = IntVar()  # Holds 'is checked' value for Network check box
 var_munki = IntVar()  # Holds 'is checked' value for software install check box
 attempts = 0  # Number of attempts when enter password
+# TODO: Disable main GUI window while password window is open.
+# TODO: Make repo location default in the repo box.
+# TODO: Remove warning for Munki installation.
+# TODO: Add button to open up sharing settings
+# TODO: Asset Tag script often failed, why?
 
 
 def get_computer_name():

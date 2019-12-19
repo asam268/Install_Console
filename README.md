@@ -19,8 +19,7 @@ Among other functions, this software sets up Mac systems for Ivanti remote manag
 
 1. Navigate to Sharing Settings (System Preferences > Sharing).
 2. In the Service menu on the left, check Remote Management.
-3. After checking this option, a menu appears with the prompt, "All local users can access this computer to: ". Check 
-all options on this menu. (If this menu does not appear, select "Options..." in the bottom right of the window).
+3. After checking this option, a menu appears with the prompt, "All local users can access this computer to: ". Check all options on this menu. (If this menu does not appear, select "Options..." in the bottom right of the window).
 4. With Remote Management selected in the Service menu, select "Computer Settings..." on the right of the window.
 5. (Optional) Enter the device's asset tag in the "Info 1" textbox under "Computer Information."
 6. Close System Preferences.
