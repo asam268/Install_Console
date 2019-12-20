@@ -33,11 +33,6 @@ var_atag = IntVar()  # Holds 'is checked' value for Asset Tag check box
 var_network = IntVar()  # Holds 'is checked' value for Network check box
 var_munki = IntVar()  # Holds 'is checked' value for software install check box
 attempts = 0  # Number of attempts when enter password
-# TODO: Disable main GUI window while password window is open.
-# TODO: Make repo location default in the repo box.
-# TODO: Remove warning for Munki installation.
-# TODO: Add button to open up sharing settings
-# TODO: Asset Tag script often failed, why?
 
 
 def get_computer_name():
@@ -57,16 +52,6 @@ def get_asset_tag():
     """
 
     output = os.popen("defaults read /Library/Preferences/com.apple.RemoteDesktop.plist Text1").read()
-    return output
-
-
-def get_repo():
-    """Gets the currently configured software repo URL for Munki
-
-    :return: str, software repo URL
-    """
-
-    output = os.popen("defaults read /Library/Preferences/ManagedInstalls.plist SoftwareRepoURL").read()
     return output
 
 
@@ -92,6 +77,8 @@ def pwd_window(c, a, src):
     global computer_name
     global asset_tag
     global attempts
+    global root
+    root.withdraw()
     attempts = 0
 
     pop = tk.Toplevel(bg="#ECECEC")
@@ -102,10 +89,13 @@ def pwd_window(c, a, src):
     pwd = ttk.Entry(pop_frame, show='*')
     b1 = ttk.Button(pop_frame, text='Okay')
     if src == "main":
+        # pop.bind('<Return>', lambda: exec_changes(pwd, pop))
         b1.configure(command=lambda: exec_changes(pwd, pop))
+        pop.bind('<Return>', lambda event: exec_changes(pwd, pop))
         computer_name = c.get()
         asset_tag = a.get()
     elif src == "munki":
+        # pop.bind('<Return>', lambda: Munki_Tools.munki_install(pwd, pop))
         b1.configure(command=lambda: Munki_Tools.munki_install(pwd, pop))
     b2 = ttk.Button(pop_frame, text='Cancel', command=lambda: pop.destroy())
 
@@ -115,6 +105,7 @@ def pwd_window(c, a, src):
     b1.pack(side='right')
     b2.pack(side='left')
 
+    pop.bind('<Destroy>', lambda x: root.deiconify())
     pop.mainloop()
 
 
@@ -142,7 +133,6 @@ def validate(pwd):
         return False
 
 
-# TODO: Activate functions when implementing
 def exec_changes(e, pop):
     """Executes functions based off the data entered in the main GUI.
 
@@ -241,7 +231,7 @@ def set_manifest(pwd):
     os.system("echo %s|sudo -S %s" % (pwd, cmd))
 
 
-# TODO: Needs testing for dmg removal
+# TODO: Needs testing for dmg removal. Path should be correct.
 def run_ivanti_script(pwd):
     """Runs script to install Ivanti LANDesk if Ivanti checkbox is checked on the main GUI
 
@@ -251,8 +241,8 @@ def run_ivanti_script(pwd):
 
     cmd = "./Resources/LandeskAgent2016"
     os.system("echo %s|sudo -S %s" % (pwd, cmd))
-    # if os.path.exists("./LandeskAgent2016.dmg"):
-    #     os.system("rm ./LandeskAgent2016.dmg")
+    if os.path.exists("./LandeskAgent2016.dmg"):
+        os.system("rm ./LandeskAgent2016.dmg")
 
 
 def run_asset_tag_script(pwd):
@@ -293,12 +283,12 @@ def enable_fast_user_switching(pwd):
 def ivanti_warning():
     """Displays a message box warning.
 
-    The message box is displayed when the Ivanti checkbox is unchecked.
+    The message box is displayed when the Ivanti checkbox is unchecked and LANDesk is not installed.
 
     :return: void
     """
 
-    if not var_ivanti.get():
+    if not var_ivanti.get() and not os.path.exists("/Library/Application Support/LANDesk"):
         tkMessageBox.showwarning("Ivanti LANDesk Warning", "The Asset Tag script will only work if LANDesk is "
                                                            "installed.")
 
@@ -318,13 +308,13 @@ def munki_console(frame_m):
     global msg_repo
     global msg_manifest
     if os.path.exists("/Library/Preferences/ManagedInstalls.plist"):
-        repo = get_repo()
+        # repo = get_repo()
         manifest = get_manifest()
         lbl_munki = Label(frame_m, text="Munki Configuration", relief=RAISED, bg="#ECECEC")
         lbl_repo = Label(frame_m, text="Software Repo URL", bg="#ECECEC")
         lbl_manifest = Label(frame_m, text="Manifest (Client Identifier)", bg="#ECECEC")
         msg_repo = ttk.Entry(frame_m)
-        msg_repo.insert(0, repo)
+        msg_repo.insert(0, "http://cheese.gcsu.local/repo")
         msg_manifest = ttk.Entry(frame_m)
         msg_manifest.insert(0, manifest)
         cb_munki = Checkbutton(frame_m, text="Run Software Installation", variable=var_munki, bg="#ECECEC")
@@ -350,7 +340,7 @@ def install_munki_tools():
     :return: void
     """
 
-    tkMessageBox.showwarning("Install Munki Tools", "Installing Munki Tools will require a system reboot.")
+    # tkMessageBox.showwarning("Install Munki Tools", "Installing Munki Tools will require a system reboot.")
     pwd_window(0, 0, "munki")
 
 
@@ -390,11 +380,16 @@ def initialize():
     cb_network = Checkbutton(frame, text="Run Network Script", variable=var_network, bg="#ECECEC")
     cb_network.select()
 
-    # Execute button: opens password window
+    # Buttons
     btn_cname = ttk.Button(frame_m, text="Execute", command=lambda: pwd_window(msg_cname, msg_atag, "main"))
+    btn_sharing = ttk.Button(
+        frame,
+        text="Sharing Settings",
+        command=lambda: os.system('open "x-apple.systempreferences:com.apple.preferences.sharing"'))
 
     # populate GUI
     lbl_remote.pack()
+    btn_sharing.pack()
     lbl_cname.pack()
     msg_cname.pack()
     lbl_atag.pack()
