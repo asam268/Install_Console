@@ -29,6 +29,7 @@ def munki_install(e, pop_m):
     pwd = e.get()
     pwd = "'" + pwd + "'"
     if GUI.validate(pwd):
+        pop_m.withdraw()
         cmd = "echo %s|sudo -S open ./Resources/munkitools.pkg" % pwd
         os.system(cmd)
         pop_m.destroy()

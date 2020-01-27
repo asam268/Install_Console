@@ -95,7 +95,7 @@ def pwd_window(c, a, src):
         computer_name = c.get()
         asset_tag = a.get()
     elif src == "munki":
-        # pop.bind('<Return>', lambda: Munki_Tools.munki_install(pwd, pop))
+        pop.bind('<Return>', lambda event: Munki_Tools.munki_install(pwd, pop))
         b1.configure(command=lambda: Munki_Tools.munki_install(pwd, pop))
     b2 = ttk.Button(pop_frame, text='Cancel', command=lambda: pop.destroy())
 
@@ -146,6 +146,7 @@ def exec_changes(e, pop):
     pwd = "'" + pwd + "'"
 
     if validate(pwd):
+        pop.withdraw()
         set_computer_name(pwd)
         set_asset_tag(pwd)
         if var_ivanti.get():
@@ -231,7 +232,7 @@ def set_manifest(pwd):
     os.system("echo %s|sudo -S %s" % (pwd, cmd))
 
 
-# TODO: Needs testing for dmg removal. Path should be correct.
+# TODO: Needs to unmount LDMSClient
 def run_ivanti_script(pwd):
     """Runs script to install Ivanti LANDesk if Ivanti checkbox is checked on the main GUI
 
@@ -278,6 +279,11 @@ def enable_fast_user_switching(pwd):
     os.system("echo %s|sudo -S %s" % (pwd, cmd))
     cmd = "defaults write /Library/Preferences/.GlobalPreferences MultipleSessionEnabled -bool YES"
     os.system("echo %s|sudo -S %s" % (pwd, cmd))
+
+
+def open_sharing_settings():
+    os.system('open "x-apple.systempreferences:com.apple.preferences.sharing"')
+    root.destroy()
 
 
 def ivanti_warning():
@@ -382,10 +388,7 @@ def initialize():
 
     # Buttons
     btn_cname = ttk.Button(frame_m, text="Execute", command=lambda: pwd_window(msg_cname, msg_atag, "main"))
-    btn_sharing = ttk.Button(
-        frame,
-        text="Sharing Settings",
-        command=lambda: os.system('open "x-apple.systempreferences:com.apple.preferences.sharing"'))
+    btn_sharing = ttk.Button(frame, text="Open Sharing Settings", command=lambda: open_sharing_settings())
 
     # populate GUI
     lbl_remote.pack()
