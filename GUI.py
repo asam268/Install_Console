@@ -243,7 +243,9 @@ def run_ivanti_script(pwd):
     cmd = "./Resources/LandeskAgent2016"
     os.system("echo %s|sudo -S %s" % (pwd, cmd))
     if os.path.exists("./LandeskAgent2016.dmg"):
-        os.system("rm ./LandeskAgent2016.dmg")
+        cmd = "rm ./LandeskAgent2016.dmg"
+        os.system("echo %s|sudo -S %s" % (pwd, cmd))
+        os.system("hdiutil detach /Volumes/LDMSClient")
 
 
 def run_asset_tag_script(pwd):
@@ -392,7 +394,6 @@ def initialize():
 
     # populate GUI
     lbl_remote.pack()
-    btn_sharing.pack()
     lbl_cname.pack()
     msg_cname.pack()
     lbl_atag.pack()
@@ -400,6 +401,7 @@ def initialize():
     cb_ivanti.pack()
     cb_atag_script.pack()
     cb_network.pack()
+    btn_sharing.pack()
     lbl_space.pack()
     munki_console(frame_m)
     frame.pack()
