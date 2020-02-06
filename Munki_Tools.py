@@ -8,6 +8,7 @@ a password, a way to install Munki, and initializing a managed software update.
 """
 
 import os
+import Tkinter as tk
 from Tkinter import *
 import ttk
 import GUI
@@ -51,3 +52,21 @@ def managed_software_update(pwd):
     os.system(cmd)
     cmd = "echo %s|sudo -S managedsoftwareupdate --installonly -v" % pwd
     os.system(cmd)
+
+
+def munki_pre_install():
+    pre_root = Toplevel()
+    # tk.NoDefaultRoot()
+    # pre_root.withdraw()
+    # pre_root.title("Munki Software Deployment")
+
+    # pre_root.configure(bg="#ECECEC")
+    # pre_frame = Frame(pre_root, bg="#ECECEC")
+    #
+    # lbl_pre = Label(pre_frame, text="Would you like to install Munki Software Deployment Tools before imaging?",
+    #                 bg="#ECECEC")
+    #
+    # pre_frame.pack()
+    # lbl_pre.pack()
+    pre_root.mainloop()
+
