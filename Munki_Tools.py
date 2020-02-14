@@ -33,6 +33,7 @@ def munki_install(e, pop_m):
         cmd = "echo %s|sudo -S open ./Resources/munkitools.pkg" % pwd
         os.system(cmd)
         pop_m.destroy()
+        os.system('open "x-apple.systempreferences:com.apple.preference.security"')
     else:
         attempts += 1
         if attempts <= 1:

@@ -147,6 +147,7 @@ def exec_changes(e, pop):
 
     if validate(pwd):
         pop.withdraw()
+        os.system("caffeinate -t 3600 &")
         set_computer_name(pwd)
         set_asset_tag(pwd)
         if var_ivanti.get():
@@ -162,7 +163,7 @@ def exec_changes(e, pop):
             set_repo(pwd)
             set_manifest(pwd)
             Munki_Tools.managed_software_update(pwd)
-            print("Munki checked")
+            # print("Munki checked")
         enable_fast_user_switching(pwd)
         os.system("sudo -k")
         pop.destroy()
@@ -232,7 +233,6 @@ def set_manifest(pwd):
     os.system("echo %s|sudo -S %s" % (pwd, cmd))
 
 
-# TODO: Needs to unmount LDMSClient
 def run_ivanti_script(pwd):
     """Runs script to install Ivanti LANDesk if Ivanti checkbox is checked on the main GUI
 
