@@ -186,13 +186,16 @@ def set_computer_name(pwd):
     """
 
     global computer_name
-    computer_name = "\"" + computer_name + "\""
-    cmd = "scutil --set ComputerName " + computer_name
-    os.system("echo %s|sudo -S %s" % (pwd, cmd))
-    cmd = "scutil --set HostName " + computer_name
-    os.system("echo %s|sudo -S %s" % (pwd, cmd))
-    cmd = "scutil --set LocalHostName " + computer_name
-    os.system("echo %s|sudo -S %s" % (pwd, cmd))
+    if computer_name == get_computer_name():
+        print("Computer name has not changed.")
+    else:
+        computer_name = "\"" + computer_name + "\""
+        cmd = "scutil --set ComputerName " + computer_name
+        os.system("echo %s|sudo -S %s" % (pwd, cmd))
+        cmd = "scutil --set HostName " + computer_name
+        os.system("echo %s|sudo -S %s" % (pwd, cmd))
+        cmd = "scutil --set LocalHostName " + computer_name
+        os.system("echo %s|sudo -S %s" % (pwd, cmd))
 
 
 def set_asset_tag(pwd):
@@ -203,8 +206,11 @@ def set_asset_tag(pwd):
     """
 
     global asset_tag
-    cmd = "defaults write /Library/Preferences/com.apple.RemoteDesktop.plist Text1 " + asset_tag
-    os.system("echo %s|sudo -S %s" % (pwd, cmd))
+    if asset_tag == get_asset_tag():
+        print("Asset tag has not changed")
+    else:
+        cmd = "defaults write /Library/Preferences/com.apple.RemoteDesktop.plist Text1 " + asset_tag
+        os.system("echo %s|sudo -S %s" % (pwd, cmd))
 
 
 def set_repo(pwd):
